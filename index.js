@@ -29,10 +29,6 @@ app.listen(port, function () {
   );
 });
 
-//Open Weather
-let weather = require("./routes/weather.js");
-app.use("/weather", weather);
-
 //Create a record and save it
 app.use("/createPerson", createPerson);
 //Find a record
