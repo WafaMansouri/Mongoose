@@ -1,44 +1,23 @@
 let express = require("express");
-let mongoose = require("mongoose");
 let app = express();
 let port = 4000;
 let createPerson = require("./routes/createPerson");
 let findPerson = require("./routes/findPerson");
 let Person = require("./models/person");
-
-// console.log(process.env.MONGO_URI);
-mongoose.connect(
-  "mongodb+srv://wafa:wafa@cluster0.rvslg.mongodb.net/mongoose-checkpoint?retryWrites=true&w=majority",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  },
-  (err) => {
-    if (err) {
-      console.log(err);
-    } else console.log("database connected");
-  }
-);
+const connectDB = require("./helper/connectDB");
 
 app.listen(port, function () {
   console.log(
     "The server is running, " +
-      " please, open your browser at http://localhost:%s",
+      " please, open your browser on http://localhost:%s",
     port
   );
 });
-
+connectDB();
 //Create a record and save it
-app.use("/createPerson", createPerson);
+app.use("/person", createPerson);
 //Find a record
 app.use("/findPerson", findPerson);
-
-//Create many records as initialisation with method model.create
-// Person.create([
-//   { name: "donia", age: 28, favouriteFoods: ["Spaguetti", "Sardine"] },
-//   { name: "souha", age: 29, favouriteFoods: ["3ejja"] },
-// ]);
 
 //Perform Classic Updates by Running Find, Edit, then Save
 function addHamb(food) {
@@ -73,9 +52,12 @@ app.put("/updateAge/:name", (req, res) => {
 });
 //find all persons
 app.get("/", (req, res) => {
+  console.log(req.params);
   Person.find()
     .exec()
-    .then((doc) => res.status(200).send(doc))
+    .then((doc) => {
+      res.status(200).send(doc);
+    })
     .catch((err) => res.send(err));
 });
 
@@ -114,6 +96,4 @@ app.get("/burrito", (req, res) => {
         } else res.send(data);
       }
     });
-  // .then((docs) => res.send(docs))
-  // .catch((err) => res.send(err));
 });

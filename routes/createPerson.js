@@ -18,4 +18,10 @@ router.post("/:person", (req, res) => {
     } else res.send(data);
   });
 });
+
+//Create many records
+router.get("/createMany", (req, res) => {
+  Person.create(req.body); //We shoud send an array of person from the body
+  res.send("");
+});
 module.exports = router;
